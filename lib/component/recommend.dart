@@ -10,7 +10,7 @@ class Recommend extends StatelessWidget {
   Widget _titleWidget(){
     return Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.fromLTRB(10.0, 2, 0, 5),
+      padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
@@ -60,7 +60,7 @@ class Recommend extends StatelessWidget {
 
   Widget _recommendList(){
     return Container(
-      height: ScreenUtil().setHeight(350),
+      height: ScreenUtil().setHeight(320),
       margin: EdgeInsets.only(top: 10),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -82,7 +82,7 @@ class Recommend extends StatelessWidget {
           _titleWidget(),
           _recommendList()
         ],
-      ) ,
+      ),
     );
   }
 }

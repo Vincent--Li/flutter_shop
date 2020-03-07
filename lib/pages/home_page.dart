@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/component/ad_banner.dart';
+import 'package:flutter_shop/component/floor_content.dart';
+import 'package:flutter_shop/component/floor_title.dart';
 import 'package:flutter_shop/component/leader_phone.dart';
 import 'package:flutter_shop/component/recommend.dart';
 import 'package:flutter_shop/component/swiper_diy.dart';
@@ -46,6 +48,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             String leaderImage = data['data']['shopInfo']['leaderImage'];
             String leaderPhone = data['data']['shopInfo']['leaderPhone'];
             List<Map> recommendList = (data['data']['recommend'] as List).cast();
+            String floor1Title = data['data']['floor1Pic']['PICTURE_ADDRESS'];
+            List<Map> floor1 = (data['data']['floor1'] as List).cast();
+            String floor2Title = data['data']['floor2Pic']['PICTURE_ADDRESS'];
+            List<Map> floor2 = (data['data']['floor2'] as List).cast();
+            String floor3Title = data['data']['floor3Pic']['PICTURE_ADDRESS'];
+            List<Map> floor3 = (data['data']['floor3'] as List).cast();
+
 
             return SingleChildScrollView(
               child: Column(
@@ -55,6 +64,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   AdBanner(adPicture: adPicture,),
                   LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
                   Recommend(recommandList: recommendList),
+                  FloorTitle(picture_address: floor1Title),
+                  FloorContent(floorGoodList: floor1,),
+                  FloorTitle(picture_address: floor2Title),
+                  FloorContent(floorGoodList: floor2,),
+                  FloorTitle(picture_address: floor3Title),
+                  FloorContent(floorGoodList: floor3,),
+
                 ],
               ),
             );
