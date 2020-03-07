@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/component/ad_banner.dart';
+import 'package:flutter_shop/component/leader_phone.dart';
 import 'package:flutter_shop/component/swiper_diy.dart';
 import 'package:flutter_shop/component/top_navigator.dart';
 import 'package:flutter_shop/service/service_method.dart';
@@ -31,12 +32,17 @@ class _HomePageState extends State<HomePage> {
             List<Map> swiper = (data['data']['slides'] as List).cast();
             List<Map> navigatorList = (data['data']['category'] as List).cast();
             String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
+            String leaderImage = data['data']['shopInfo']['leaderImage'];
+            String leaderPhone = data['data']['shopInfo']['leaderPhone'];
 
             return Column(
               children: <Widget>[
                 SwiperDIY(swiperDataList: swiper,),
                 TopNavigator(navigatorList: navigatorList,),
-                AdBanner(adPicture: adPicture,)
+                SizedBox(height: 2,),
+                AdBanner(adPicture: adPicture,),
+                SizedBox(height: 2,),
+                LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone)
               ],
             );
           }else{

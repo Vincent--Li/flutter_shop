@@ -9,7 +9,9 @@ class AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 0),
       child: Image.network(adPicture),
+      color: Colors.red,
     );
   }
 }
