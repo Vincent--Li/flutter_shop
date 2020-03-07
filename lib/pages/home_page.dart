@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter_shop/component/swiper_diy.dart';
+import 'package:flutter_shop/service/service_method.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   @override
@@ -7,80 +11,55 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String homePageContent = '正在获取数据';
 
-  String inputText = "";
-  String responseData = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    getHomePageContent().then((val){
+      setState(() {
+        homePageContent = val.toString();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, width: 750, height: 1334, );
+
+    print('设备像素密度:${ScreenUtil.pixelRatio}');
+    print('设备高:${ScreenUtil.screenHeight}');
+    print('设备宽:${ScreenUtil.screenWidth}');
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("美好人间"),
+        title: Text("百姓生活+"),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: FutureBuilder(
+        future: getHomePageContent(),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            var data = json.decode(snapshot.data.toString());
+            print(data);
+            List<Map> swiper = (data['data']['slides'] as List).cast();
+            return Column(
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                      labelText: "美女类型"
-                  ),
-                  onChanged: (text){
-                    setState(() {
-                      this.inputText = text;
-                    });
-                  },
-                ),
-
-                RaisedButton(
-                  child: Text("点击请求数据"),
-                  onPressed: (){
-                    _choiceAction();
-                  },
-                ),
-                SizedBox(height: 10,),
-                Text(this.responseData)
+                SwiperDIY(swiperDataList: swiper,)
               ],
-            ),
-          ),
-        ),
-      )
+            );
+          }else{
+            return Center(
+              child: Text(
+                "加载中", 
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(28)
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
-
-  void _choiceAction(){
-    print("开始选择喜欢的类型。。。。。。。。。。。");
-        if(this.inputText == ''){
-          showDialog(
-              context: context,
-              builder: (context)=>AlertDialog(
-                title: Text("美女类型不能为空"),
-
-              )
-          );
-        }else{
-          getHttp().then((val){
-            setState(() {
-              this.responseData = val['data']['name'].toString();
-            });
-          });
-        }
-  }
-
-  Future getHttp() async{
-    try{
-      Response response;
-      Dio dio = new Dio();
-      var data = {'name': inputText};
-      response = await dio.get(
-          "https://www.easy-mock.com/mock/5c60131a4bed3a6342711498/baixing/dabaojian",
-        queryParameters: data,
-      );
-      return response.data;
-    }catch(e){
-      return print(e);
-    }
-  }
 }
+
