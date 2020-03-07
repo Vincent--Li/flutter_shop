@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:convert';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+
 import 'package:flutter_shop/component/ad_banner.dart';
 import 'package:flutter_shop/component/floor_content.dart';
 import 'package:flutter_shop/component/floor_title.dart';
-import 'package:flutter_shop/component/hot_goods.dart';
 import 'package:flutter_shop/component/leader_phone.dart';
 import 'package:flutter_shop/component/recommend.dart';
 import 'package:flutter_shop/component/swiper_diy.dart';
 import 'package:flutter_shop/component/top_navigator.dart';
 import 'package:flutter_shop/service/service_method.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   String homePageContent = '正在获取数据';
+  int page = 1;
+  List<Map> hotGoodsList =[] ;
 
 
   @override
@@ -29,6 +32,17 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     // TODO: implement initState
     super.initState();
     print("homepage loading...");
+    var formData = {
+      "page": page
+    };
+    request('homePageBelowContent', formData: formData).then((val){
+      var data = json.decode(val.toString());
+      List<Map> newGoodsList = (data['data'] as List).cast();
+      setState(() {
+        hotGoodsList.addAll(newGoodsList);
+        page++;
+      });
+    });
   }
 
   @override
@@ -61,8 +75,27 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             List<Map> floor3 = (data['data']['floor3'] as List).cast();
 
 
-            return SingleChildScrollView(
-              child: Column(
+            return EasyRefresh(
+              header: ClassicalHeader(
+                bgColor: Colors.white,
+                textColor: Colors.pink,
+                infoColor: Colors.pink,
+                infoText: "加载中====",
+                showInfo: true,
+                noMoreText: "",
+                refreshedText: "下拉刷新",
+
+              ),
+              footer: ClassicalFooter(
+                bgColor: Colors.white,
+                textColor: Colors.pink,
+                infoColor: Colors.pink,
+                infoText: "加载中----",
+                showInfo: true,
+                noMoreText: "",
+                loadedText: "上拉加载"
+              ),
+              child: ListView(
                 children: <Widget>[
                   SwiperDIY(swiperDataList: swiper,),
                   TopNavigator(navigatorList: navigatorList,),
@@ -75,10 +108,34 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   FloorContent(floorGoodList: floor2,),
                   FloorTitle(picture_address: floor3Title),
                   FloorContent(floorGoodList: floor3,),
-                  HotGoods(),
-
+                  _hotGoods(),
                 ],
               ),
+              onLoad: () async {
+                print("开始加载更多");
+                var formData = {
+                  "page": page
+                };
+                await request('homePageBelowContent', formData: formData).then((val){
+                  var data = json.decode(val.toString());
+                  try{
+                    List<Map> newGoodsList = (data['data'] as List).cast();
+                    if(newGoodsList != null){
+                      setState(() {
+                        hotGoodsList.addAll(newGoodsList);
+                        page++;
+                      });
+                    }
+                  }catch(e){
+                    print(e);
+                  }
+
+
+                });
+              },
+              onRefresh: () async {
+                print("开始刷新");
+              },
             );
           }else{
             return Center(
@@ -93,6 +150,74 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         },
       ),
     );
+  }
+
+  Widget _hotGoods(){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          hotTitle,
+          _wrapList()
+        ],
+      ),
+    );
+  }
+
+  Widget hotTitle = Container(
+    margin: EdgeInsets.only(top: 10),
+    alignment: Alignment.center,
+    color: Colors.transparent,
+    padding: EdgeInsets.all(5),
+    child: Text("火爆专区"),
+  );
+
+  Widget _wrapList(){
+    if(hotGoodsList.length!=0){
+      List<Widget> listWidget = hotGoodsList.map((val){
+        return InkWell(
+          onTap: (){
+
+          },
+          child: Container(
+            width: ScreenUtil().setWidth(372),
+            color: Colors.white,
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.only(bottom: 3),
+            child: Column(
+              children: <Widget>[
+                Image.network(val['image'], width: ScreenUtil().setWidth(372),),
+                Text(
+                  val['name'],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.pink, fontSize: ScreenUtil().setSp(26)),
+
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('￥${val['mallPrice']}'),
+                    Text(
+                      '￥${val['mallPrice']}',
+                      style: TextStyle(
+                          color: Colors.black26,
+                          decoration: TextDecoration.lineThrough
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      }).toList();
+
+      return Wrap(
+        spacing: 2,
+        children: listWidget,
+      );
+    }else{
+      return Text('');
+    }
   }
 
 
