@@ -34,7 +34,7 @@ class _IndexPageState extends State<IndexPage> {
 
   ];
 
-  final List tabBodies = [
+  final List<Widget> tabBodies = [
     HomePage(),
     CategoryPage(),
     CartPage(),
@@ -61,7 +61,10 @@ class _IndexPageState extends State<IndexPage> {
     print('设备宽:${ScreenUtil.screenWidth}');
 
     return Scaffold(
-      body: this.currentPage,
+      body: IndexedStack(
+        index: currentIndex,
+        children: tabBodies,
+      ),
       backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/component/ad_banner.dart';
 import 'package:flutter_shop/component/leader_phone.dart';
+import 'package:flutter_shop/component/recommend.dart';
 import 'package:flutter_shop/component/swiper_diy.dart';
 import 'package:flutter_shop/component/top_navigator.dart';
 import 'package:flutter_shop/service/service_method.dart';
@@ -13,8 +14,18 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   String homePageContent = '正在获取数据';
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("homepage loading...");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +45,18 @@ class _HomePageState extends State<HomePage> {
             String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
             String leaderImage = data['data']['shopInfo']['leaderImage'];
             String leaderPhone = data['data']['shopInfo']['leaderPhone'];
+            List<Map> recommendList = (data['data']['recommend'] as List).cast();
 
-            return Column(
-              children: <Widget>[
-                SwiperDIY(swiperDataList: swiper,),
-                TopNavigator(navigatorList: navigatorList,),
-                SizedBox(height: 2,),
-                AdBanner(adPicture: adPicture,),
-                SizedBox(height: 2,),
-                LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone)
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SwiperDIY(swiperDataList: swiper,),
+                  TopNavigator(navigatorList: navigatorList,),
+                  AdBanner(adPicture: adPicture,),
+                  LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+                  Recommend(recommandList: recommendList),
+                ],
+              ),
             );
           }else{
             return Center(
@@ -59,5 +72,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 }
 
