@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LeaderPhone extends StatelessWidget {
 
@@ -12,10 +13,19 @@ class LeaderPhone extends StatelessWidget {
     return Container(
       child: InkWell(
         onTap: (){
-
+          _launchURL();
         },
         child: Image.network(leaderImage),
       ),
     );
+  }
+
+  void _launchURL() async {
+    String url = 'tel:' + leaderPhone;
+    if(await canLaunch(url)){
+      await launch(url);
+    }else{
+      throw 'url不能进行访问, 异常';
+    }
   }
 }
