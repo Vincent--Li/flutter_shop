@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/component/left_category_nav.dart';
 
-class CategoryPage extends StatelessWidget {
+class CategoryPage extends StatefulWidget {
+  @override
+  _CategoryPageState createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("分类页面"),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          '商品分类',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20,
+              color: Colors.white
+          ),
+        ),
+
+      ),
+      body: Container(
+        child: Row(
+          children: <Widget>[
+            LeftCategoryNav(),
+
+          ],
+        ),
       ),
     );
   }

@@ -135,6 +135,23 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
               },
               onRefresh: () async {
                 print("开始刷新");
+                var formData = {
+                  "page": 1
+                };
+                await request('homePageBelowContent', formData: formData).then((val){
+                  var data = json.decode(val.toString());
+                  try{
+                    List<Map> newGoodsList = (data['data'] as List).cast();
+                    if(newGoodsList != null){
+                      setState(() {
+                        hotGoodsList = newGoodsList;
+                        page = 1;
+                      });
+                    }
+                  }catch(e){
+                    print(e);
+                  }
+                });
               },
             );
           }else{
