@@ -25,3 +25,42 @@ Future getHomePageContent() async {
     return print('ERROR: ===========>{$e}');
   }
 }
+
+//获取火爆专区方法
+Future getHomePageBelowContent() async {
+  try{
+    print("start to get homepage below..............");
+    Response response;
+    Dio dio = new Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+    int page = 1;
+    response = await dio.post(servicePath['homePageBelowContent'], data: page);
+    if(response.statusCode == 200){
+      return response.data;
+    }else{
+      throw Exception("后端接口异常");
+    }
+  }catch(e){
+    return print('ERROR: ===========>{$e}');
+  }
+}
+
+Future request(configPath, {formData}) async{
+  try{
+    Response response;
+    Dio dio = new Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+    if(formData == null){
+      response = await dio.post(servicePath[configPath]);
+    }else{
+      response = await dio.post(servicePath[configPath], data: formData);
+    }
+    if(response.statusCode == 200){
+      return response.data;
+    }else{
+      throw Exception("后端接口异常");
+    }
+  }catch(e){
+    return print('ERROR: ===========>{$e}');
+  }
+}
