@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'home_page.dart';
 import 'category_page.dart';
@@ -52,6 +53,13 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    ScreenUtil.init(context, width: 750, height: 1334, );
+
+    print('设备像素密度:${ScreenUtil.pixelRatio}');
+    print('设备高:${ScreenUtil.screenHeight}');
+    print('设备宽:${ScreenUtil.screenWidth}');
+
     return Scaffold(
       body: this.currentPage,
       backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
