@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/component/left_category_nav.dart';
+import 'package:flutter_shop/component/right_category_nav.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -28,6 +29,11 @@ class _CategoryPageState extends State<CategoryPage> {
         child: Row(
           children: <Widget>[
             LeftCategoryNav(),
+            Column(
+              children: <Widget>[
+                RightCategoryNav(),
+              ],
+            )
 
           ],
         ),
