@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/category.dart';
+import 'package:flutter_shop/model/category_goods_list.dart';
+import 'package:flutter_shop/provider/category_goods_list.dart';
 import 'package:flutter_shop/provider/child_category.dart';
+import 'package:flutter_shop/service/service_method.dart';
 import 'package:provide/provide.dart';
 
 class RightCategoryNav extends StatefulWidget {
@@ -10,8 +15,6 @@ class RightCategoryNav extends StatefulWidget {
 }
 
 class _RightCategoryNavState extends State<RightCategoryNav> {
-
-  var listIndex = 0;
 
   @override
   void initState() {
@@ -26,7 +29,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
       builder: (context, child, childCategory){
         return Container(
             height: ScreenUtil().setHeight(80),
-            width: ScreenUtil().setWidth(530),
+            width: ScreenUtil().setWidth(560),
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border(
@@ -46,12 +49,11 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
   }
 
   Widget _rightInkWell(BxMallSubDto item, int index){
-    bool isChecked = (index == listIndex);
+    bool isChecked = (index == Provide.value<ChildCategory>(context).childIndex);
     return InkWell(
       onTap: (){
-        setState(() {
-          listIndex = index;
-        });
+        Provide.value<ChildCategory>(context).changeChildIndex(index);
+        _getGoodsList(categoryId: item.mallCategoryId, categorySubId: item.mallSubId);
       },
 
       child: Container(
@@ -65,5 +67,19 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         ),
       ),
     );
+  }
+
+  void _getGoodsList({String categoryId, String categorySubId}) async {
+    print('_getGoodsList: ${categoryId}, ${categorySubId}');
+    var data = {
+      'categoryId': categoryId == null?'4':categoryId,
+      'categorySubId': categorySubId == null?'':categorySubId,
+      'page': 1
+    };
+    await request('getMallGoods', formData: data).then((val){
+      var data = json.decode(val);
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+    });
   }
 }

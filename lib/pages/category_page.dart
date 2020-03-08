@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/component/category_goods_list.dart';
 import 'package:flutter_shop/component/left_category_nav.dart';
 import 'package:flutter_shop/component/right_category_nav.dart';
