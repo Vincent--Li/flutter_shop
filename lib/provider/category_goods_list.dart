@@ -5,7 +5,12 @@ class CategoryGoodsListProvide with ChangeNotifier{
   List<CategoryListData> goodsList = [];
 
   getGoodsList(List<CategoryListData> list ){
-    goodsList = list == null?[]:list;
+    goodsList =list == null?[]:list;
+    notifyListeners();
+  }
+
+  getMoreList(List<CategoryListData>  list){
+    goodsList.addAll(list == null?[]:list);
     notifyListeners();
   }
 }
