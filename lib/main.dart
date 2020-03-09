@@ -1,3 +1,4 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/provider/category_goods_list.dart';
 import 'package:flutter_shop/provider/child_category.dart';
@@ -7,6 +8,7 @@ import 'provider/counter.dart';
 import 'pages/index_page.dart';
 
 void main(){
+  //provider构造
   var counter = Counter();
   var childCategory = ChildCategory();
   var categoryGoodsList = CategoryGoodsListProvide();
@@ -17,6 +19,11 @@ void main(){
     ..provide(Provider<ChildCategory>.value(childCategory))
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsList));
 
+
+  //fluro初始化
+  final router = Router();
+
+  //跑app
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
 
