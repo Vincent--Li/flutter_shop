@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/routers/application.dart';
 
 class FloorContent extends StatelessWidget {
 
@@ -12,42 +13,42 @@ class FloorContent extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          _firstRow(),
-          _otherGoods()
+          _firstRow(context),
+          _otherGoods(context)
         ],
       ),
     );
   }
 
-  Widget _firstRow(){
+  Widget _firstRow(BuildContext context){
     return Row(
       children: <Widget>[
-        _goodsItem(floorGoodList[0]),
+        _goodsItem(context, floorGoodList[0]),
         Column(
           children: <Widget>[
-            _goodsItem(floorGoodList[1]),
-            _goodsItem(floorGoodList[2]),
+            _goodsItem(context, floorGoodList[1]),
+            _goodsItem(context, floorGoodList[2]),
           ],
         )
       ],
     );
   }
 
-  Widget _otherGoods(){
+  Widget _otherGoods(BuildContext context){
     return Row(
       children: <Widget>[
-        _goodsItem(floorGoodList[3]),
-        _goodsItem(floorGoodList[4]),
+        _goodsItem(context, floorGoodList[3]),
+        _goodsItem(context, floorGoodList[4]),
       ],
     );
   }
 
-  Widget _goodsItem(Map goods){
+  Widget _goodsItem(BuildContext context, Map goods){
     return Container(
       width: ScreenUtil().setWidth(375),
       child: InkWell(
         onTap: (){
-          print('floor goods clicked');
+          Application.router.navigateTo(context, '/detail?id=${goods['goodsId']}');
         },
         child: Image.network(goods['image']),
       ),

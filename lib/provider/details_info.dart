@@ -7,17 +7,32 @@ import 'package:flutter_shop/service/service_method.dart';
 class DetailsInfoProvide with ChangeNotifier {
   DetailsModel goodsInfo = null;
 
+  bool isLeft = true;
+  bool isRight = false;
+
   //从后台获取数据
-  getGoodsInfo(String id){
+  getGoodsInfo(String id) async{
     var formData = {
       'goodId': id
     };
-    request('getGoodDetailById', formData: formData).then((val){
+    await request('getGoodDetailById', formData: formData).then((val){
       var responseData = json.decode(val);
       print(responseData);
       goodsInfo = DetailsModel.fromJson(responseData);
       notifyListeners();
     });
+  }
+
+  //tabbar切换方法
+  shiftTabBar(String changeState){
+    if(changeState == 'left'){
+      isLeft = true;
+      isRight = false;
+    }else{
+      isLeft = false;
+      isRight = true;
+    }
+    notifyListeners();
   }
 
 }
