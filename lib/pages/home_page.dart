@@ -10,6 +10,7 @@ import 'package:flutter_shop/component/leader_phone.dart';
 import 'package:flutter_shop/component/recommend.dart';
 import 'package:flutter_shop/component/swiper_diy.dart';
 import 'package:flutter_shop/component/top_navigator.dart';
+import 'package:flutter_shop/routers/application.dart';
 import 'package:flutter_shop/service/service_method.dart';
 
 
@@ -193,7 +194,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       List<Widget> listWidget = hotGoodsList.map((val){
         return InkWell(
           onTap: (){
-
+            Application.router.navigateTo(context, '/detail?id=${val['goodsId']}');
           },
           child: Container(
             width: ScreenUtil().setWidth(372),

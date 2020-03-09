@@ -2,6 +2,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/provider/category_goods_list.dart';
 import 'package:flutter_shop/provider/child_category.dart';
+import 'package:flutter_shop/routers/application.dart';
+import 'package:flutter_shop/routers/routers.dart';
 import 'package:provide/provide.dart';
 import 'provider/counter.dart';
 
@@ -20,9 +22,6 @@ void main(){
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsList));
 
 
-  //fluro初始化
-  final router = Router();
-
   //跑app
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
@@ -30,9 +29,15 @@ void main(){
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final router = Router();
+    Routes.configureRoutes(router);
+    Application.router = router;
+
     return Container(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        onGenerateRoute: Application.router.generator,
         title: "百姓生活",
         theme: ThemeData(
           primaryColor: Colors.pink
