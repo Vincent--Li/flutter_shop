@@ -52,7 +52,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
     bool isChecked = (index == Provide.value<ChildCategory>(context).childIndex);
     return InkWell(
       onTap: (){
-        Provide.value<ChildCategory>(context).changeChildIndex(index);
+        Provide.value<ChildCategory>(context).changeChildIndex(index,item.mallSubId);
         _getGoodsList(categoryId: item.mallCategoryId, categorySubId: item.mallSubId);
       },
 
