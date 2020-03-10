@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/provider/cart.dart';
 import 'package:flutter_shop/provider/details_info.dart';
+import 'package:flutter_shop/routers/application.dart';
 import 'package:provide/provide.dart';
 
 class DetailsBottom extends StatelessWidget {
@@ -24,7 +25,7 @@ class DetailsBottom extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: (){
-
+              Application.router.navigateTo(context, '/cart');
             },
             child: Container(
               width: ScreenUtil().setWidth(150),
