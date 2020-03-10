@@ -3,6 +3,8 @@ import 'package:flutter_shop/model/cartinfo.dart';
 import 'package:flutter_shop/provider/cart.dart';
 import 'package:provide/provide.dart';
 
+import 'cart_pages/cart_item.dart';
+
 
 class CartPage extends StatelessWidget {
   @override
@@ -19,9 +21,9 @@ class CartPage extends StatelessWidget {
 
             return ListView.builder(
                 itemCount: cartList.length,
-                itemBuilder: (contex, index){
+                itemBuilder: (context, index){
                   return Card(
-                    child: Text(cartList[index].goodsName),
+                    child: CartItem(item: cartList[index]),
                   );
                 });
           }else{
