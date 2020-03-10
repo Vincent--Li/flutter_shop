@@ -29,10 +29,11 @@ class CartBottom extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Checkbox(
-            value: true,
+            value: Provide.value<CartProvide>(context).selectAllBtnValue,
             activeColor: Colors.pink,
             onChanged: (bool val){
-
+              print(val);
+              Provide.value<CartProvide>(context).selectAllItem(val);
             },
           ),
           Text('全选')
@@ -45,14 +46,14 @@ class CartBottom extends StatelessWidget {
     double allPrice = Provide.value<CartProvide>(context).allPrice;
 
     return Container(
-      width: ScreenUtil().setWidth(430),
+      width: ScreenUtil().setWidth(350),
       child: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
               Container(
                 alignment: Alignment.centerRight,
-                width: ScreenUtil().setWidth(280),
+                width: ScreenUtil().setWidth(200),
                 child: Text('合计:',
                   style: TextStyle(
                       fontSize: ScreenUtil().setSp(36)
@@ -72,7 +73,7 @@ class CartBottom extends StatelessWidget {
             ],
           ),
           Container(
-            width: ScreenUtil().setWidth(430),
+            width: ScreenUtil().setWidth(350),
             alignment: Alignment.centerRight,
             child: Text('满10元免配送费, 预购免配送费',
               style: TextStyle(
@@ -90,15 +91,15 @@ class CartBottom extends StatelessWidget {
     int allGoodsCount = Provide.value<CartProvide>(context).allGoodsCount;
 
     return Container(
-      width: ScreenUtil().setWidth(160),
-      padding: EdgeInsets.only(left:10),
+      width: ScreenUtil().setWidth(250),
+      padding: EdgeInsets.only(left:10, right: 10),
       child: InkWell(
         onTap: (){
           
         },
         child: Container(
           padding: EdgeInsets.all(10),
-          alignment: Alignment.centerRight,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.red,
             borderRadius: BorderRadius.circular(3.0)

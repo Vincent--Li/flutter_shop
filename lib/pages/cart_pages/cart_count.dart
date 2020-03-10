@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/model/cartinfo.dart';
+import 'package:flutter_shop/provider/cart.dart';
+import 'package:provide/provide.dart';
 
 class CartCount extends StatelessWidget {
+  final CartInfoModel item;
+
+  const CartCount({Key key, this.item}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,18 +19,18 @@ class CartCount extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          _reduceBtn(),
-          _countValue(),
-          _IncreBtn(),
+          _reduceBtn(context, item),
+          _countValue(context, item),
+          _IncreBtn(context, item),
         ],
       ),
     );
   }
 
-  Widget _reduceBtn(){
+  Widget _reduceBtn(BuildContext context, CartInfoModel item){
     return InkWell(
       onTap: (){
-        print('red');
+        Provide.value<CartProvide>(context).decItemNumber(item);
       },
       child: Container(
         width: ScreenUtil().setWidth(45),
@@ -40,10 +47,10 @@ class CartCount extends StatelessWidget {
     );
   }
 
-  Widget _IncreBtn(){
+  Widget _IncreBtn(BuildContext context, CartInfoModel item){
     return InkWell(
       onTap: (){
-        print('inc');
+        Provide.value<CartProvide>(context).incItemNumber(item);
       },
       child: Container(
         width: ScreenUtil().setWidth(45),
@@ -60,13 +67,13 @@ class CartCount extends StatelessWidget {
     );
   }
 
-  Widget _countValue() {
+  Widget _countValue(BuildContext context, CartInfoModel item) {
     return Container(
       width: ScreenUtil().setWidth(70),
       height: ScreenUtil().setHeight(45),
       alignment: Alignment.center,
       color: Colors.white,
-      child: Text('1'),
+      child: Text('${item.count}'),
     );
   }
 }

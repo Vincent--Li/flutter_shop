@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/cartinfo.dart';
 import 'package:flutter_shop/pages/cart_pages/cart_count.dart';
 import 'package:flutter_shop/provider/cart.dart';
+import 'package:flutter_shop/routers/application.dart';
 import 'package:provide/provide.dart';
 
 class CartItem extends StatelessWidget {
@@ -26,8 +27,8 @@ class CartItem extends StatelessWidget {
       child: Row(
         children: <Widget>[
           _cartCheckButton(context, item),
-          _cartImage(),
-          _cartGoodsName(),
+          _cartImage(context, item.goodsId),
+          _cartGoodsName(context, item.goodsId),
           _cartPrice(context, item)
         ],
       ),
@@ -35,40 +36,50 @@ class CartItem extends StatelessWidget {
   }
 
   //checkbox
-  Widget _cartCheckButton(context, item){
+  Widget _cartCheckButton(BuildContext context, CartInfoModel item){
     return Container(
       child: Checkbox(
         value: item.isCheck,
         activeColor: Colors.pink,
         onChanged: (bool val){
-
+          Provide.value<CartProvide>(context).selectItem(item);
         },
       ),
     );
   }
 
   //image
-  Widget _cartImage(){
+  Widget _cartImage(context, goodsId){
     return Container(
       width: ScreenUtil().setWidth(150),
       padding: EdgeInsets.all(3.0),
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: Colors.black12)
       ),
-      child: Image.network(item.images),
+      child: InkWell(
+        onTap: (){
+          Application.router.navigateTo(context, '/detail?id=${goodsId}');
+        },
+        child: Image.network(item.images),
+      ),
     );
   }
 
   //goods name
-  Widget _cartGoodsName(){
+  Widget _cartGoodsName(context, goodsId){
     return Container(
       width: ScreenUtil().setWidth(300),
       padding: EdgeInsets.all(10),
       alignment: Alignment.topLeft,
       child: Column(
         children: <Widget>[
-          Text(item.goodsName),
-          CartCount(),
+          InkWell(
+            onTap: (){
+              Application.router.navigateTo(context, '/detail?id=${goodsId}');
+            },
+            child: Text(item.goodsName),
+          ),
+          CartCount(item: item),
         ],
       ),
     );

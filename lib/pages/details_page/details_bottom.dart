@@ -23,50 +23,86 @@ class DetailsBottom extends StatelessWidget {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          InkWell(
-            onTap: (){
-              Application.router.navigateTo(context, '/cart');
-            },
-            child: Container(
-              width: ScreenUtil().setWidth(150),
-              alignment: Alignment.center,
-              child: Icon(Icons.shopping_cart, size: 35, color: Colors.red,),
-            ),
-          ),
-          InkWell(
-            onTap: () async {
-              await Provide.value<CartProvide>(context).save(goodsId, goodsName, count, price, images);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: ScreenUtil().setWidth(300),
-              height: ScreenUtil().setHeight(80),
-              color: Colors.green,
-              child: Text('加入购物车',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ScreenUtil().setSp(28)
+          Stack(
+            children: <Widget>[
+              InkWell(
+                onTap: (){
+                  Application.router.navigateTo(context, '/cart');
+                },
+                child: Container(
+                  width: ScreenUtil().setWidth(150),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.shopping_cart, size: 35, color: Colors.red,),
                 ),
               ),
+              Provide<CartProvide>(
+                builder: (context, child, val){
+                  int goodsCount = Provide.value<CartProvide>(context).allGoodsCount;
+                  return Positioned(
+                    top: 0,
+                    right: 10,
+                    child: InkWell(
+                      onTap: (){
+                        Application.router.navigateTo(context, '/cart');
+                      },
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+                        decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(width: 2, color: Colors.white)
+                        ),
+                        child: Text('${goodsCount}',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ScreenUtil().setSp(22)
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+          Material(
+            color: Colors.green,
+            child: InkWell(
+              onTap: () async {
+                await Provide.value<CartProvide>(context).save(goodsId, goodsName, count, price, images);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: ScreenUtil().setWidth(300),
+                height: ScreenUtil().setHeight(80),
+                child: Text('加入购物车',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ScreenUtil().setSp(28)
+                  ),
+                ),
 
+              ),
             ),
           ),
-          InkWell(
-            onTap: () async{
-              await Provide.value<CartProvide>(context).remove();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: ScreenUtil().setWidth(300),
-              height: ScreenUtil().setHeight(80),
-              color: Colors.red,
-              child: Text('立即购买',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ScreenUtil().setSp(28)
+          Material(
+            color: Colors.red,
+            child: InkWell(
+              onTap: () async{
+                await Provide.value<CartProvide>(context).remove();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: ScreenUtil().setWidth(300),
+                height: ScreenUtil().setHeight(80),
+                child: Text('立即购买',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ScreenUtil().setSp(28)
+                  ),
                 ),
-              ),
 
+              ),
             ),
           )
         ],

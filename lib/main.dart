@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shop/provider/cart.dart';
 import 'package:flutter_shop/provider/category_goods_list.dart';
 import 'package:flutter_shop/provider/child_category.dart';
+import 'package:flutter_shop/provider/current_index.dart';
 import 'package:flutter_shop/provider/details_info.dart';
 import 'package:flutter_shop/routers/application.dart';
 import 'package:flutter_shop/routers/routers.dart';
@@ -18,6 +19,7 @@ void main(){
   var categoryGoodsList = CategoryGoodsListProvide();
   var detailInfoProvide = DetailsInfoProvide();
   var cartProvide = CartProvide();
+  var currentIndex = CurrentIndexProvide();
 
   var providers = Providers();
   providers
@@ -25,7 +27,8 @@ void main(){
     ..provide(Provider<ChildCategory>.value(childCategory))
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsList))
     ..provide(Provider<DetailsInfoProvide>.value(detailInfoProvide))
-    ..provide(Provider<CartProvide>.value(cartProvide));
+    ..provide(Provider<CartProvide>.value(cartProvide))
+    ..provide(Provider<CurrentIndexProvide>.value(currentIndex));
 
   //跑app
   runApp(ProviderNode(child: MyApp(), providers: providers));
