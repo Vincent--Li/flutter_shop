@@ -1,55 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/provider/counter.dart';
 import 'package:provide/provide.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  List<String> testList = [];
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('test'),
-      ),
-      body: Center(
+    _show();
+
+    return Container(
+      child: Center(
         child: Column(
           children: <Widget>[
-            NumberTemp(),
-            MyButton(),
+            Container(
+              height: 400,
+              child: ListView.builder(itemCount: testList.length,
+                  itemBuilder: (context, index){
+                    return ListTile(
+                      title: Text(testList[index]),
+                    );
+                  }),
+            ),
+            RaisedButton(
+              child: Text("增加" ),
+              onPressed: (){
+                _add();
+              },
+            ),
+            RaisedButton(
+              child: Text("清空" ),
+
+              onPressed: (){
+                _clear();
+              },
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class NumberTemp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 200),
-      child: Provide<Counter>(
-        builder: (context, child, counter){
-          return Text(
-              '${counter.value}',
-            style: TextStyle(
-              fontSize: 28
-            ),
-          );
-        },
-      ),
-    );
+  void _add() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String temp = 'you are the best';
+    testList.add(temp);
+    preferences.setStringList('testInfo', testList);
+    _show();
   }
-}
 
+  void _show() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if(preferences.getStringList('testInfo') != null){
+      setState(() {
+        testList = preferences.getStringList('testInfo');
+      });
+    }
+  }
 
-class MyButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: (){
-        Provide.value<Counter>(context).increment();
-      },
-      child: Text('incr'),
-    );
+  void _clear() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+//    preferences.clear();
+    preferences.remove('testInfo');
+    setState(() {
+      testList = [];
+    });
   }
 }
 
