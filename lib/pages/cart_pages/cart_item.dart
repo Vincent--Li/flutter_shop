@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/cartinfo.dart';
 import 'package:flutter_shop/pages/cart_pages/cart_count.dart';
+import 'package:flutter_shop/provider/cart.dart';
+import 'package:provide/provide.dart';
 
 class CartItem extends StatelessWidget {
 
@@ -23,20 +25,20 @@ class CartItem extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          _cartCheckButton(),
+          _cartCheckButton(context, item),
           _cartImage(),
           _cartGoodsName(),
-          _cartPrice()
+          _cartPrice(context, item)
         ],
       ),
     );
   }
 
   //checkbox
-  Widget _cartCheckButton(){
+  Widget _cartCheckButton(context, item){
     return Container(
       child: Checkbox(
-        value: true,
+        value: item.isCheck,
         activeColor: Colors.pink,
         onChanged: (bool val){
 
@@ -73,7 +75,7 @@ class CartItem extends StatelessWidget {
   }
 
   //price
-  Widget _cartPrice(){
+  Widget _cartPrice(context, item){
     return Container(
       width: ScreenUtil().setWidth(150),
       alignment: Alignment.centerRight,
@@ -83,7 +85,7 @@ class CartItem extends StatelessWidget {
           Container(
             child: InkWell(
               onTap: (){
-
+                Provide.value<CartProvide>(context).removeItem(item.goodsId);
               },
               child: Icon(Icons.delete, color: Colors.black26, size: 30,),
             ),

@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CartProvide with ChangeNotifier {
   String cartString = "[]";
   List<CartInfoModel> cartList = [];
+  double allPrice = 0; //总价
+  int allGoodsCount = 0; //商品数量
 
   save(goodsId, goodsName, count, price, images) async {
 
@@ -34,14 +36,13 @@ class CartProvide with ChangeNotifier {
         'count' : count,
         'price' : price,
         'images' : images,
+        'isCheck' : true
       };
       tempList.add(newGoods);
       cartList.add(CartInfoModel.fromJson(newGoods));
     }
 
     cartString = json.encode(tempList).toString();
-    print('字符串$cartString');
-    print('数据模型$cartList');
     prefs.setString('cartInfo', cartString);
 
     notifyListeners();
@@ -61,9 +62,42 @@ class CartProvide with ChangeNotifier {
     cartList = [];
     if(cartString != null){
       List<Map> temp = (json.decode(cartString.toString()) as List).cast();
+
+      allPrice = 0;
+      allGoodsCount = 0;
       temp.forEach((item){
+        if(item['isCheck']){
+          allPrice += (item['count'] * item['price']);
+          allGoodsCount += item['count'];
+        }
         cartList.add(CartInfoModel.fromJson(item));
       });
     }
+
+    notifyListeners();
+  }
+
+  removeItem(String goodsId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+
+    var temp = cartString == null ? []:json.decode(cartString.toString());
+    List<Map> tempList = (temp as List).cast();
+    var index = 0;
+    var delIndex = 0;
+    tempList.forEach((item){
+      if(item['goodsId'].toString() == goodsId){
+        delIndex = index;
+      }
+      index++;
+    });
+
+    tempList.removeAt(delIndex);
+
+    cartString = json.encode(tempList).toString();
+    prefs.setString('cartInfo', cartString);
+
+    await getCartInfo();
+
   }
 }
