@@ -30,9 +30,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    print("homepage loading...");
+
     var formData = {
       "page": page
     };
@@ -113,7 +112,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                 ],
               ),
               onLoad: () async {
-                print("开始加载更多");
                 var formData = {
                   "page": page
                 };
@@ -135,7 +133,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                 });
               },
               onRefresh: () async {
-                print("开始刷新");
                 var formData = {
                   "page": 1
                 };

@@ -1,5 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/model/category.dart';
+import 'package:flutter_shop/model/category_goods_list.dart';
+import 'package:flutter_shop/provider/category_goods_list.dart';
+import 'package:flutter_shop/provider/child_category.dart';
+import 'package:flutter_shop/provider/current_index.dart';
+import 'package:flutter_shop/routers/application.dart';
+import 'package:flutter_shop/service/service_method.dart';
+import 'package:provide/provide.dart';
 
 class TopNavigator extends StatelessWidget {
   
@@ -7,10 +17,16 @@ class TopNavigator extends StatelessWidget {
 
   const TopNavigator({Key key, this.navigatorList}) : super(key: key);
   
-  Widget _gridViewItemUI(BuildContext context, item){
+  Widget _gridViewItemUI(BuildContext context, item, index){
     return InkWell(
       onTap: (){
-        print('点击了导航');
+        CategoryData categoryData = CategoryData.fromJson(item);
+
+        Provide.value<ChildCategory>(context).getChildCategory(categoryData.bxMallSubDto);
+        _getGoodsList(context, categoryId: categoryData.mallCategoryId);
+        Provide.value<ChildCategory>(context).changeListIndex(index);
+        Provide.value<CurrentIndexProvide>(context).changeIndex(1);
+
       },
       child: Column(
         children: <Widget>[
@@ -34,10 +50,23 @@ class TopNavigator extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
         padding: EdgeInsets.all(5.0),
-        children: navigatorList.map((item){
-          return _gridViewItemUI(context, item);
-        }).toList(),
+        children: navigatorList.asMap().map((index, item){
+          return MapEntry(index, _gridViewItemUI(context, item, index));
+        }).values.toList(),
       ),
     );
+  }
+
+  void _getGoodsList(context, {String categoryId}) async {
+    var data = {
+      'categoryId': categoryId==null?'4':categoryId,
+      'categorySubId': '',
+      'page': 1
+    };
+    await request('getMallGoods', formData: data).then((val){
+      var data = json.decode(val);
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+    });
   }
 }

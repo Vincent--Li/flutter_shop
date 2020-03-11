@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../model/category.dart';
 
 class ChildCategory with ChangeNotifier{
+
+  List<CategoryData> categoryList = [];
   List<BxMallSubDto> childCategoryList = [];
 
   int childIndex = 0; //子类高亮索引
@@ -9,6 +11,12 @@ class ChildCategory with ChangeNotifier{
   String categoryId;
   int page =1; //列表页数
   String noMoreText = '';//显示没有数据的文字
+  int listIndex = 0; //左侧导航的index
+
+  //大类架子啊
+  getCategory(List<CategoryData> list){
+    categoryList = list;
+  }
 
   //大类切换, 小类需要清零
   getChildCategory(List<BxMallSubDto> list){
@@ -44,8 +52,10 @@ class ChildCategory with ChangeNotifier{
   changeNoMore(String text){
     noMoreText = text;
     notifyListeners();
-
   }
 
+  void changeListIndex(int index) {
+    listIndex = index;
+  }
 
 }

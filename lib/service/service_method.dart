@@ -7,7 +7,6 @@ import '../service/service_method.dart';
 //获取首页主体内容
 Future getHomePageContent() async {
   try{
-    print("start to get homepage..............");
     Response response;
     Dio dio = new Dio();
     dio.options.contentType = "application/x-www-form-urlencoded";
@@ -29,7 +28,6 @@ Future getHomePageContent() async {
 //获取火爆专区方法
 Future getHomePageBelowContent() async {
   try{
-    print("start to get homepage below..............");
     Response response;
     Dio dio = new Dio();
     dio.options.contentType = "application/x-www-form-urlencoded";

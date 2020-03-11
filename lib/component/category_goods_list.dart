@@ -62,11 +62,9 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
                       return _listWidget(data.goodsList, index);
                     }),
                 onLoad: () async{
-                  print("上拉加载更多");
                   _getMoreList();
                 },
                 onRefresh: (){
-                  print("下拉刷新");
                 },
               )
             ),

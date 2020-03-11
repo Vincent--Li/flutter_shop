@@ -13,7 +13,6 @@ class CartProvide with ChangeNotifier {
   bool selectAllBtnValue = true;
 
   save(goodsId, goodsName, count, price, images) async {
-    print('save invoked');
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
@@ -61,7 +60,6 @@ class CartProvide with ChangeNotifier {
   remove() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('cartInfo');
-    print('clear completed ..............');
     cartList.clear();
     allPrice = 0;
     allGoodsCount = 0;

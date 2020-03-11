@@ -10,29 +10,16 @@ import 'dart:convert';
 
 
 
-class LeftCategoryNav extends StatefulWidget {
-  @override
-  _LeftCategoryNavState createState() => _LeftCategoryNavState();
-}
+class LeftCategoryNav extends StatelessWidget {
 
-class _LeftCategoryNavState extends State<LeftCategoryNav> {
-
-  var listIndex = 0;
-
-  List<CategoryData> list = [];
 
   List<CategoryListData> goodsList = [];
 
-
-  @override
-  void initState() {
-    super.initState();
-    _getCategory();
-    _getGoodsList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    _getCategory(context);
+    _getGoodsList(context);
+
     return Container(
       width: ScreenUtil().setHeight(150),
       decoration: BoxDecoration(
@@ -43,28 +30,33 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
           )
         )
       ),
-      child: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index){
-          return _leftInkWell(index);
-        }
+      child: Provide<ChildCategory>(
+        builder: (context, child, val){
+
+          List<CategoryData> categoryList = Provide.value<ChildCategory>(context).categoryList;
+
+          return ListView.builder(
+              itemCount: categoryList.length,
+              itemBuilder: (context, index){
+                return _leftInkWell(context, categoryList, index);
+              }
+          );
+        },
       ),
     );
   }
 
-  void _getCategory() async {
+  void _getCategory(BuildContext context) async {
     await request('getCategory').then((val){
       var data = json.decode(val);
       CategoryModel model  = CategoryModel.fromJson(data);
-      setState(() {
-        list = model.data;
-      });
-//      model.data.forEach((item)=> print(item.mallCategoryName));
-      Provide.value<ChildCategory>(context).getChildCategory(list[0].bxMallSubDto);
+
+      Provide.value<ChildCategory>(context).getCategory(model.data);
+      Provide.value<ChildCategory>(context).getChildCategory(model.data[0].bxMallSubDto);
     });
   }
 
-  void _getGoodsList({String categoryId}) async {
+  void _getGoodsList(BuildContext context, {String categoryId}) async {
     var data = {
       'categoryId': categoryId==null?'4':categoryId,
       'categorySubId': '',
@@ -77,18 +69,18 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
     });
   }
 
-  Widget _leftInkWell(int index){
-    bool isClicked = (index == listIndex);
+  Widget _leftInkWell(BuildContext context, List<CategoryData> categoryList, int index){
+    bool isClicked = (index == Provide.value<ChildCategory>(context).listIndex);
 
     return InkWell(
       onTap: (){
-        setState(() {
-          listIndex = index;
-        });
-        var childList = list[index].bxMallSubDto;
-        var categoryId = list[index].mallCategoryId;
+
+        Provide.value<ChildCategory>(context).changeListIndex(index);
+
+        var childList = categoryList[index].bxMallSubDto;
+        var categoryId = categoryList[index].mallCategoryId;
         Provide.value<ChildCategory>(context).getChildCategory(childList);
-        _getGoodsList(categoryId: categoryId);
+        _getGoodsList(context, categoryId: categoryId);
       },
       child: Container(
         height: ScreenUtil().setHeight(100),
@@ -99,7 +91,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
               bottom: BorderSide(width: 1, color: Colors.black12)
           ),
         ),
-        child: Text(list[index].mallCategoryName, style: TextStyle(
+        child: Text(categoryList[index].mallCategoryName, style: TextStyle(
           fontSize: ScreenUtil().setSp(28),
         ), ),
       ),

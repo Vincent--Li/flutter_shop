@@ -70,7 +70,6 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
   }
 
   void _getGoodsList({String categoryId, String categorySubId}) async {
-    print('_getGoodsList: ${categoryId}, ${categorySubId}');
     var data = {
       'categoryId': categoryId == null?'4':categoryId,
       'categorySubId': categorySubId == null?'':categorySubId,
